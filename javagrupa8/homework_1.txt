@@ -1,0 +1,74 @@
+import java.util.Comparator;
+
+public class SalesRepresentative {
+
+    private String name;
+    private int sales;
+    private int quota;
+    private int revenues;
+
+
+    public SalesRepresentative(String name, int sales, int quota, int revenues) {
+        this.name = name;
+        this.sales = sales;
+        this.quota=quota;
+        this.revenues=revenues;
+    }
+
+    public static final Comparator<SalesRepresentative> NAME_COMP = new Comparator<SalesRepresentative>() {
+        public int compare(SalesRepresentative o1, SalesRepresentative o2) {
+            return o1.name.compareTo(o2.name);
+        }
+    };
+
+    public static final Comparator<SalesRepresentative> REVENUES_COMP = new Comparator<SalesRepresentative>() {
+        public int compare(SalesRepresentative o1, SalesRepresentative o2) {
+            return o1.revenues - o2.revenues;
+        }
+    };
+
+    public String getName() {return name;}
+    public int getRevenues() {return revenues;}
+
+    @Override
+    public String toString() {
+        return String.format("%s - %d", name, revenues);
+    }
+}
+ // SalesRepresentativeMember.java
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class SalesRepresentativeMember {
+    public static void main(String[] args) {
+        List<SalesRepresentative> data = new ArrayList<SalesRepresentative>();
+        data.add(new SalesRepresentative("Arianna", 10, 200,2000));
+        data.add(new SalesRepresentative("Carmencita", 15, 100,1500));
+        data.add(new SalesRepresentative("Deborah", 12, 250, 3000));
+        data.add(new SalesRepresentative("Armando", 20, 245,4900));
+
+        System.out.printf("    raw: %s%n", data);
+        Collections.sort(data, SalesRepresentative.REVENUES_COMP);
+        System.out.printf(" by revenues: %s%n", data);
+        Collections.sort(data, SalesRepresentative.NAME_COMP);
+        System.out.printf("by name: %s%n", data);
+
+        // a comparator to sort by revenues.  but in the event of equal revenues the sort
+        // will be performed by name
+        Comparator<SalesRepresentative> revenuesNameComp = new Comparator<SalesRepresentative>() {
+            public int compare(SalesRepresentative o1, SalesRepresentative o2) {
+                int ret = o2.getRevenues() - o1.getRevenues();
+                if(ret != 0) {
+                    return ret;
+                }
+                return o1.getName().compareTo(o2.getName());
+            }
+        };
+        Collections.sort(data, revenuesNameComp);
+        System.out.printf("by both: %s%n", data);
+
+    }
+}
